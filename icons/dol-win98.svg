@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="48" height="48" shape-rendering="crispEdges">
+  <!-- Windows 98 Classical Government Agency Hall (Department of Lands / DOL) -->
+  
+  <!-- Foundation Steps / Marble Plinth -->
+  <path d="M2 28h28v2H2z" fill="#808080"/>
+  <path d="M2 26h28v2H2z" fill="#d4d0c8"/>
+  <path d="M2 26h28v1H2z" fill="#ffffff"/>
+  <path d="M1 26h1v4H1zM30 26h1v4h-1zM2 30h28v1H2z" fill="#000000"/>
+  
+  <path d="M3 24h26v2H3z" fill="#e8e4dc"/>
+  <path d="M3 24h26v1H3z" fill="#ffffff"/>
+  <path d="M2 24h1v2H2zM29 24h1v2h-1zM3 26h26v1H3z" fill="#505050"/>
+
+  <!-- Interior Chamber (Behind Columns) -->
+  <rect x="4" y="13" width="24" height="11" fill="#000055"/>
+  <!-- Government Portal Grand Doorway -->
+  <rect x="13" y="16" width="6" height="8" fill="#5a2d0c"/>
+  <rect x="13" y="16" width="3" height="8" fill="#783c10"/>
+  <path d="M16 16h1v8h-1z" fill="#301404"/>
+  <rect x="15" y="20" width="1" height="1" fill="#ffdd44"/>
+  <rect x="17" y="20" width="1" height="1" fill="#ffdd44"/>
+  <!-- Transom Arched Fanlight (Amber Glow) -->
+  <path d="M13 14h6v2h-6z" fill="#ffcc44"/>
+  <path d="M14 13h4v1h-4z" fill="#ffe688"/>
+  <path d="M13 13h1v1h-1zM18 13h1v1h-1z" fill="#000000"/>
+
+  <!-- Classical Architectural Columns (4 Pillars) -->
+  <!-- Pillar 1 -->
+  <rect x="5" y="14" width="3" height="9" fill="#dcd8cc"/>
+  <rect x="5" y="14" width="1" height="9" fill="#ffffff"/>
+  <rect x="7" y="14" width="1" height="9" fill="#888478"/>
+  <path d="M4 13h5v1H4zM4 23h5v1H4z" fill="#ffffff"/>
+  <path d="M4 12h5v1H4zM4 24h5v1H4z" fill="#000000"/>
+  <path d="M4 14h1v9H4zM8 14h1v9h-1z" fill="#000000"/>
+
+  <!-- Pillar 2 -->
+  <rect x="10" y="14" width="3" height="9" fill="#dcd8cc"/>
+  <rect x="10" y="14" width="1" height="9" fill="#ffffff"/>
+  <rect x="12" y="14" width="1" height="9" fill="#888478"/>
+  <path d="M9 13h5v1H9zM9 23h5v1H9z" fill="#ffffff"/>
+  <path d="M9 12h5v1H9zM9 24h5v1H9z" fill="#000000"/>
+  <path d="M9 14h1v9H9zM13 14h1v9h-1z" fill="#000000"/>
+
+  <!-- Pillar 3 -->
+  <rect x="19" y="14" width="3" height="9" fill="#dcd8cc"/>
+  <rect x="19" y="14" width="1" height="9" fill="#ffffff"/>
+  <rect x="21" y="14" width="1" height="9" fill="#888478"/>
+  <path d="M18 13h5v1h-5zM18 23h5v1h-5z" fill="#ffffff"/>
+  <path d="M18 12h5v1h-5zM18 24h5v1h-5z" fill="#000000"/>
+  <path d="M18 14h1v9h-1zM22 14h1v9h-1z" fill="#000000"/>
+
+  <!-- Pillar 4 -->
+  <rect x="24" y="14" width="3" height="9" fill="#dcd8cc"/>
+  <rect x="24" y="14" width="1" height="9" fill="#ffffff"/>
+  <rect x="26" y="14" width="1" height="9" fill="#888478"/>
+  <path d="M23 13h5v1h-5zM23 23h5v1h-5z" fill="#ffffff"/>
+  <path d="M23 12h5v1h-5zM23 24h5v1h-5z" fill="#000000"/>
+  <path d="M23 14h1v9h-1zM27 14h1v9h-1z" fill="#000000"/>
+
+  <!-- Architrave Beam / Frieze -->
+  <rect x="3" y="11" width="26" height="2" fill="#dcd8cc"/>
+  <rect x="3" y="11" width="26" height="1" fill="#ffffff"/>
+  <rect x="3" y="12" width="26" height="1" fill="#9c988c"/>
+  <path d="M2 11h1v2H2zM29 11h1v2h-1zM3 10h26v1H3z" fill="#000000"/>
+
+  <!-- Classical Triangular Pediment (Gable Roof) -->
+  <!-- Stepped Pediment Fill -->
+  <path d="M15 4h2v1h-2z" fill="#ffffff"/>
+  <path d="M14 5h4v1h-4z" fill="#ffffff"/>
+  <path d="M12 6h8v1h-8z" fill="#eae6dc"/>
+  <path d="M10 7h12v1h-12z" fill="#eae6dc"/>
+  <path d="M8 8h16v1H8z" fill="#eae6dc"/>
+  <path d="M6 9h20v1H6z" fill="#eae6dc"/>
+  <path d="M4 10h24v1H4z" fill="#eae6dc"/>
+
+  <!-- Pediment Outline & Shadows -->
+  <path d="M15 3h2v1h-2zM13 4h2v1h-2zM17 4h2v1h-2zM11 5h2v1h-2zM19 5h2v1h-2zM9 6h2v1H9zM21 6h2v1h-2zM7 7h2v1H7zM23 7h2v1h-2zM5 8h2v1H5zM25 8h2v1h-2zM3 9h2v1H3zM27 9h2v1h-2zM2 10h2v1H2zM28 10h2v1h-2z" fill="#000000"/>
+  <!-- Gold Roof Cornice Highlight -->
+  <path d="M14 5h1v1h-1zM17 5h1v1h-1zM12 6h1v1h-1zM19 6h1v1h-1zM10 7h1v1h-1zM21 7h1v1h-1zM8 8h1v1H8zM23 8h1v1h-1zM6 9h1v1H6zM25 9h1v1h-2z" fill="#ffdd44"/>
+
+  <!-- DOL (Department of Lands) Official Royal Crest / Medallion -->
+  <!-- Gold Circular Medallion -->
+  <rect x="14" y="6" width="4" height="4" fill="#ffd700"/>
+  <rect x="15" y="5" width="2" height="1" fill="#ffe866"/>
+  <rect x="15" y="10" width="2" height="1" fill="#cc9900"/>
+  <!-- Red Emblem Center (Garuda / Land Shield) -->
+  <rect x="15" y="7" width="2" height="2" fill="#cc0000"/>
+  <rect x="15" y="7" width="1" height="1" fill="#ffffff"/>
+  <path d="M14 6h1v1h-1zM17 6h1v1h-1zM14 9h1v1h-1zM17 9h1v1h-1z" fill="#000000"/>
+
+  <!-- Spire / Mast with Thai National Ribbon on Apex -->
+  <rect x="15" y="1" width="2" height="2" fill="#ffd700"/>
+  <rect x="15" y="0" width="2" height="1" fill="#ffffff"/>
+  <!-- Thai Ribbon/Flag (Red, White, Blue) -->
+  <rect x="17" y="1" width="3" height="1" fill="#cc0000"/>
+  <rect x="17" y="2" width="3" height="1" fill="#002277"/>
+
+  <!-- Foreground Cadastral Map Deed (LPC - Land Parcel Cadastre) -->
+  <path d="M18 19h11v10H18z" fill="#ffffff"/>
+  <path d="M18 18h11v1H18zM17 19h1v10h-1zM29 19h1v10h-1zM18 29h11v1H18z" fill="#000000"/>
+  <rect x="19" y="19" width="9" height="1" fill="#ffd700"/>
+  <!-- Green Land Parcel Grids -->
+  <rect x="19" y="21" width="4" height="3" fill="#22aa44"/>
+  <rect x="24" y="21" width="4" height="3" fill="#44cc66"/>
+  <rect x="19" y="25" width="4" height="3" fill="#33bb55"/>
+  <rect x="24" y="25" width="4" height="3" fill="#22aa44"/>
+  <!-- Boundary lines -->
+  <path d="M23 21v7h-1v-7zM19 24h9v1h-9z" fill="#002266"/>
+  <!-- Red Cadastral Marker Pin -->
+  <circle cx="23.5" cy="24.5" r="1.5" fill="#ff0000"/>
+  <circle cx="23" cy="24" r="0.5" fill="#ffffff"/>
+
+  <!-- Authentic Windows 98 Shortcut Overlay Arrow (Bottom-Left) -->
+  <rect x="1" y="22" width="9" height="9" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+  <path d="M2 28l3-3v2h2v-4h-4v2h2l-3 3z" fill="#0000aa"/>
+  <path d="M3 27l2-2v1h2v-2h-2v1l-2 2z" fill="#000000"/>
+</svg>

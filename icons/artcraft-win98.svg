@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="48" height="48" shape-rendering="crispEdges">
+  <!-- Windows 98 Style Pixel-Art Icon: ArtCraft Apps (Pixel Art Studio & Palette) -->
+  
+  <!-- Artist Palette Body (Classic 90s Wood Tone with Pixel Bevel) -->
+  <path d="M7 6h15v2h4v3h2v10h-2v3h-4v2H11v-2H6v-3H4V11h2V8h1V6z" fill="#000000"/>
+  <path d="M8 7h13v2h4v3h2v8h-2v3h-4v2H12v-2H7v-3H5V12h2V9h1V7z" fill="#805020"/>
+  <path d="M8 7h13v1h-13zM7 8h2v2H7zM5 12h2v6H5zM8 21h12v1H8z" fill="#f5d799"/>
+  <path d="M8 8h12v1h4v3h2v7h-2v3h-4v1H12v-1H7v-3H6V12h2V9h1V8z" fill="#dfad68"/>
+
+  <!-- Palette Thumb Hole -->
+  <rect x="20" y="16" width="4" height="4" fill="#000000"/>
+  <rect x="21" y="17" width="2" height="2" fill="#c0c0c0"/>
+  <rect x="20" y="16" width="3" height="1" fill="#402010"/>
+  <rect x="20" y="17" width="1" height="2" fill="#402010"/>
+
+  <!-- Color Paint Blobs (Pixel Art Primary & Secondary Dots) -->
+  <!-- Red Blob -->
+  <rect x="9" y="10" width="3" height="3" fill="#ff0044"/>
+  <rect x="9" y="10" width="2" height="1" fill="#ff88a3"/>
+  <rect x="10" y="12" width="2" height="1" fill="#880020"/>
+  
+  <!-- Yellow Blob -->
+  <rect x="14" y="9" width="3" height="3" fill="#ffcc00"/>
+  <rect x="14" y="9" width="2" height="1" fill="#ffff88"/>
+  <rect x="15" y="11" width="2" height="1" fill="#aa7700"/>
+
+  <!-- Cyan/Blue Blob -->
+  <rect x="19" y="11" width="3" height="3" fill="#00aaff"/>
+  <rect x="19" y="11" width="2" height="1" fill="#80d4ff"/>
+  <rect x="20" y="13" width="2" height="1" fill="#0055aa"/>
+
+  <!-- Green Blob -->
+  <rect x="10" y="15" width="3" height="3" fill="#00cc44"/>
+  <rect x="10" y="15" width="2" height="1" fill="#88ffaa"/>
+  <rect x="11" y="17" width="2" height="1" fill="#006622"/>
+
+  <!-- Pixel Canvas Grid Tile on Top-Left -->
+  <rect x="2" y="2" width="9" height="9" fill="#000000"/>
+  <rect x="3" y="3" width="7" height="7" fill="#ffffff"/>
+  <!-- 4-pixel grid preview -->
+  <rect x="4" y="4" width="2" height="2" fill="#ff0055"/>
+  <rect x="7" y="4" width="2" height="2" fill="#00aaff"/>
+  <rect x="4" y="7" width="2" height="2" fill="#ffcc00"/>
+  <rect x="7" y="7" width="2" height="2" fill="#00cc44"/>
+  <rect x="3" y="3" width="7" height="1" fill="#ffffff"/>
+  <rect x="3" y="3" width="1" height="7" fill="#ffffff"/>
+  <rect x="9" y="4" width="1" height="6" fill="#808080"/>
+  <rect x="4" y="9" width="6" height="1" fill="#808080"/>
+
+  <!-- Paintbrush (Crossing diagonally from bottom-left to center-right) -->
+  <!-- Brush Handle (Wood & Blue) -->
+  <path d="M5 28l9-9 2 2-9 9z" fill="#000080"/>
+  <path d="M5 28l9-9 1 1-9 9z" fill="#0080ff"/>
+  <path d="M6 29l8-8 1 1-8 8z" fill="#000040"/>
+  <path d="M4 29l1 1 1-1-1-1z" fill="#000000"/>
+
+  <!-- Silver Ferrule -->
+  <path d="M14 19l3-3 2 2-3 3z" fill="#d0d0d0"/>
+  <path d="M14 19l3-3 1 1-3 3z" fill="#ffffff"/>
+  <path d="M16 21l1-1 1 1-1 1z" fill="#707070"/>
+
+  <!-- Brush Tip (Bristles with Red Pixel Paint) -->
+  <path d="M17 16l3-3 2 1-1 3-3 1z" fill="#301505"/>
+  <path d="M19 14l2-2 1 1-1 2-2 1z" fill="#ff0055"/>
+  <rect x="20" y="12" width="2" height="2" fill="#ff0055"/>
+  <rect x="21" y="11" width="1" height="1" fill="#ffffff"/>
+
+  <!-- Sparkle Accent (Pixel Star) -->
+  <rect x="26" y="3" width="1" height="3" fill="#ffff00"/>
+  <rect x="25" y="4" width="3" height="1" fill="#ffff00"/>
+  <rect x="26" y="4" width="1" height="1" fill="#ffffff"/>
+</svg>
