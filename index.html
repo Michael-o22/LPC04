@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>RetroLink OS - Interactive Showcase Hub</title>
+  <style>
+    /* =========================================================
+       1. RETRO 90s BASE STYLES & CRT SHADER
+       ========================================================= */
+    :root {
+      --desktop-bg: #008080; /* Classic Win95 Teal */
+      --win-gray: #c0c0c0;
+      --win-light: #ffffff;
+      --win-dark: #808080;
+      --win-darkest: #000000;
+      --title-blue: linear-gradient(90deg, #000080, #1084d0);
+      --title-inactive: linear-gradient(90deg, #808080, #a0a0a0);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'MS Sans Serif', Tahoma, 'Segoe UI', -apple-system, sans-serif;
+      font-size: 12px;
+      background-color: var(--desktop-bg);
+      background-image: url('thumb-1920-1161622.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+    }
+
+    /* CRT Scanline & Screen Glow Overlay */
+    #crt-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.22) 50%),
+                  linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 3px, 6px 100%;
+      z-index: 999999;
+      opacity: 0.75;
+      transition: opacity 0.2s;
+    }
+
+    /* =========================================================
+       2. RETRO BEVEL BORDERS (Windows 95/98 3D Look)
+       ========================================================= */
+    .bevel-raised {
+      border: 2px solid;
+      border-color: var(--win-light) var(--win-darkest) var(--win-darkest) var(--win-light);
+      background-color: var(--win-gray);
+    }
+
+    .bevel-sunken {
+      border: 2px solid;
+      border-color: var(--win-darkest) var(--win-light) var(--win-light) var(--win-darkest);
+      background-color: var(--win-light);
+    }
+
+    .btn-retro {
+      border: 2px solid;
+      border-color: var(--win-light) var(--win-darkest) var(--win-darkest) var(--win-light);
+      background: var(--win-gray);
+      padding: 3px 8px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      outline: none;
+    }
+
+    .btn-retro:active, .btn-retro.active-pressed {
+      border-color: var(--win-darkest) var(--win-light) var(--win-light) var(--win-darkest);
+      padding: 4px 7px 2px 9px;
+    }
+
+    /* =========================================================
+       3. DESKTOP & ICONS
+       ========================================================= */
+    #desktop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 32px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    .desktop-icon {
+      width: 78px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      padding: 6px 4px;
+      border-radius: 2px;
+      transition: background 0.1s;
+    }
+
+    .desktop-icon:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .desktop-icon.selected {
+      background: rgba(0, 0, 128, 0.65);
+      outline: 1px dotted rgba(255, 255, 255, 0.8);
+    }
+
+    .desktop-icon .icon-img {
+      font-size: 34px;
+      line-height: 1;
+      margin-bottom: 6px;
+      filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+    }
+
+    .retro-icon-img {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      object-fit: contain;
+      pointer-events: none;
+      vertical-align: middle;
+      display: inline-block;
+    }
+
+    .desktop-icon .icon-label {
+      color: #ffffff;
+      font-size: 11px;
+      text-shadow: 1px 1px 2px #000000;
+      word-break: break-word;
+      line-height: 1.2;
+    }
+
+    /* =========================================================
+       4. WINDOW SYSTEM & RESIZE HANDLERS
+       ========================================================= */
+    .win-window {
+      position: absolute;
+      min-width: 280px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.45);
+      z-index: 100;
+      touch-action: none;
+    }
+
+    .win-titlebar {
+      height: 26px;
+      background: var(--title-blue);
+      color: white;
+      padding: 2px 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: move;
+      font-weight: bold;
+      touch-action: none;
+    }
+
+    .win-window.inactive .win-titlebar {
+      background: var(--title-inactive);
+      color: #e0e0e0;
+    }
+
+    .title-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      pointer-events: none;
+    }
+
+    .title-controls {
+      display: flex;
+      gap: 3px;
+      pointer-events: auto;
+    }
+
+    .win-btn {
+      width: 18px;
+      height: 18px;
+      font-size: 11px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--win-gray);
+      border: 1.5px solid;
+      border-color: var(--win-light) var(--win-darkest) var(--win-darkest) var(--win-light);
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .win-btn:active {
+      border-color: var(--win-darkest) var(--win-light) var(--win-light) var(--win-darkest);
+    }
+
+    .win-content {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background: #c0c0c0;
+      touch-action: auto;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    /* Resize Handles (8 directions) */
+    .win-resize-handle {
+      position: absolute;
+      z-index: 15;
+      touch-action: none;
+    }
+
+    .win-resize-n { top: -4px; left: 6px; right: 6px; height: 7px; cursor: ns-resize; }
+    .win-resize-s { bottom: -4px; left: 6px; right: 6px; height: 7px; cursor: ns-resize; }
+    .win-resize-w { left: -4px; top: 6px; bottom: 6px; width: 7px; cursor: ew-resize; }
+    .win-resize-e { right: -4px; top: 6px; bottom: 6px; width: 7px; cursor: ew-resize; }
+    .win-resize-nw { top: -4px; left: -4px; width: 12px; height: 12px; cursor: nwse-resize; }
+    .win-resize-ne { top: -4px; right: -4px; width: 12px; height: 12px; cursor: nesw-resize; }
+    .win-resize-sw { bottom: -4px; left: -4px; width: 12px; height: 12px; cursor: nesw-resize; }
+    .win-resize-se { bottom: -4px; right: -4px; width: 12px; height: 12px; cursor: nwse-resize; }
+
+    .win-window.is-maximized .win-resize-handle {
+      display: none !important;
+    }
+
+    /* =========================================================
+       5. SHOWCASE APP SPECIFIC STYLES
+       ========================================================= */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .project-card {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: #ffffff;
+      border: 2px solid;
+      border-color: var(--win-darkest) var(--win-light) var(--win-light) var(--win-darkest);
+    }
+
+    .project-card.featured-card {
+      border: 2px solid;
+      border-color: #000080 var(--win-light) var(--win-light) #000080;
+      background: #f4f8ff;
+      box-shadow: 2px 2px 8px rgba(0, 0, 128, 0.15);
+    }
+
+    .featured-badge {
+      background: #000080;
+      color: #ffeb3b;
+      font-size: 9px;
+      font-weight: bold;
+      padding: 1px 6px;
+      border: 1px solid #000050;
+      letter-spacing: 0.5px;
+      display: inline-block;
+    }
+
+    .project-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .project-header .proj-icon {
+      font-size: 24px;
+    }
+
+    .project-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #000080;
+    }
+
+    .project-desc {
+      font-size: 11px;
+      color: #333333;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .tag-badge {
+      font-size: 9px;
+      background: #e0e0e0;
+      padding: 1px 4px;
+      border: 1px solid #808080;
+    }
+
+    /* Tools Hub Specific Styles */
+    .tool-item-card {
+      background: #ffffff;
+      border: 2px solid;
+      border-color: var(--win-darkest) var(--win-light) var(--win-light) var(--win-darkest);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .tool-item-card:hover {
+      background: #f8fbff;
+    }
+    .tool-item-card.is-selected {
+      background: #eef4ff;
+      border-color: #000080 var(--win-light) var(--win-light) #000080;
+      box-shadow: inset 1px 1px 0px #000080, inset -1px -1px 0px #000080;
+    }
+    .tool-item-card.featured-tool {
+      border: 2px solid;
+      border-color: #000080 var(--win-light) var(--win-light) #000080;
+      background: #f6faff;
+      box-shadow: 1px 1px 5px rgba(0, 0, 128, 0.12);
+    }
+    .tool-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .tool-table th {
+      background: #dfdfdf;
+      padding: 4px 6px;
+      text-align: left;
+      border-right: 1px solid #808080;
+      border-bottom: 1px solid #808080;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    .tool-table td {
+      padding: 5px 6px;
+      border-bottom: 1px dotted #ccc;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+    .tool-table tr:hover td {
+      background: #000080;
+      color: #ffffff;
+    }
+    .tool-table tr:hover td a, .tool-table tr:hover td button {
+      color: #ffffff;
+    }
+    .tool-table tr.is-selected td {
+      background: #000080;
+      color: #ffffff;
+    }
+    .tool-modal-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    /* =========================================================
+       6. TASKBAR & START MENU
+       ========================================================= */
+    #taskbar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background: var(--win-gray);
+      border-top: 2px solid var(--win-light);
+      display: flex;
+      align-items: center;
+      padding: 2px 4px;
+      gap: 6px;
+      z-index: 9999;
+    }
+
+    #start-btn {
+      font-weight: bold;
+      font-size: 12px;
+      height: 25px;
+      padding: 0 8px;
+    }
+
+    #taskbar-windows {
+      flex: 1;
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    #taskbar-windows::-webkit-scrollbar { display: none; }
+
+    .taskbar-item {
+      max-width: 170px;
+      min-width: 110px;
+      height: 25px;
+      padding: 0 8px;
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .taskbar-item.active {
+      border-color: var(--win-darkest) var(--win-light) var(--win-light) var(--win-darkest);
+      background: #e6e6e6;
+      font-weight: bold;
+      box-shadow: inset 1px 1px 1px #000000;
+    }
+
+    #system-tray {
+      height: 25px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 2px solid;
+      border-color: var(--win-dark) var(--win-light) var(--win-light) var(--win-dark);
+      font-size: 11px;
+    }
+
+    /* Volume Popup Dialog */
+    #volume-popup {
+      position: absolute;
+      bottom: 34px;
+      right: 8px;
+      width: 160px;
+      background: var(--win-gray);
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.4);
+      z-index: 10001;
+      display: none;
+      flex-direction: column;
+    }
+
+    .volume-header {
+      background: var(--title-blue);
+      color: white;
+      font-weight: bold;
+      font-size: 11px;
+      padding: 2px 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .volume-body {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .volume-slider-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .volume-slider-box input[type="range"] {
+      flex: 1;
+      accent-color: #000080;
+      cursor: pointer;
+    }
+
+    /* Start Menu */
+    #start-menu {
+      position: absolute;
+      bottom: 34px;
+      left: 4px;
+      width: 220px;
+      display: none;
+      box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.45);
+      z-index: 10000;
+    }
+
+    .start-sidebar {
+      background: linear-gradient(180deg, #000080, #1084d0);
+      color: white;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      padding: 14px 6px;
+      font-weight: bold;
+      font-size: 16px;
+      letter-spacing: 2px;
+    }
+
+    .start-items {
+      flex: 1;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .start-item {
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .start-item:hover {
+      background: #000080;
+      color: white;
+    }
+
+    /* Responsive Adjustments for Mobile */
+    @media (max-width: 600px) {
+      .win-window {
+        min-width: 260px;
+      }
+      .taskbar-item {
+        max-width: 120px;
+        min-width: 80px;
+        font-size: 10px;
+      }
+      #system-tray {
+        padding: 0 4px;
+        gap: 5px;
+      }
+      .desktop-icon {
+        width: 68px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CRT Shader Overlay (Toggleable) -->
+  <div id="crt-overlay"></div>
+
+  <!-- DESKTOP WORKSPACE -->
+  <div id="desktop">
+    <!-- Desktop Icons rendered by JS -->
+  </div>
+
+  <!-- TASKBAR -->
+  <div id="taskbar">
+    <button class="btn-retro" id="start-btn" onclick="toggleStartMenu(event)">
+      <span style="font-size: 14px;">🪟</span> <strong>Start</strong>
+    </button>
+    <div id="taskbar-windows"></div>
+    <div id="system-tray">
+      <span id="sound-indicator" style="cursor: pointer;" title="Volume Settings" onclick="toggleVolumePopup(event)">🔊</span>
+      <span id="clock">12:00 PM</span>
+    </div>
+  </div>
+
+  <!-- VOLUME POPUP (Authentic Retro Sound Control) -->
+  <div id="volume-popup" class="bevel-raised">
+    <div class="volume-header">
+      <span>Master Volume</span>
+      <button class="win-btn" style="width: 14px; height: 14px; font-size: 8px;" onclick="closeVolumePopup()">✕</button>
+    </div>
+    <div class="volume-body">
+      <div class="volume-slider-box">
+        <span>🔈</span>
+        <input type="range" id="volume-slider" min="0" max="100" value="60" oninput="handleVolumeChange(this.value)">
+        <span>🔊</span>
+      </div>
+      <div style="font-size: 10px; font-weight: bold;" id="volume-level-text">60%</div>
+      <div style="display: flex; gap: 8px; width: 100%; justify-content: space-between; align-items: center;">
+        <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; cursor: pointer;">
+          <input type="checkbox" id="mute-checkbox" onchange="toggleMute(this.checked)"> Mute
+        </label>
+        <button class="btn-retro" style="font-size: 10px; padding: 2px 5px;" onclick="testBeep()">Beep 🎵</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- START MENU -->
+  <div id="start-menu" class="bevel-raised">
+    <div style="display: flex;">
+      <div class="start-sidebar">RETROLINK 98</div>
+      <div class="start-items">
+        <div class="start-item" onclick="openWindow('projects'); closeStartMenu();">
+          <span>📁</span> <span>UAV</span>
+        </div>
+        <div class="start-item" onclick="soundOpen(); window.open('https://demo-condomap.40.co.th/', '_blank'); closeStartMenu();">
+          <img src="icons/condo-win98.svg" class="retro-icon-img" style="width: 16px; height: 16px;" alt="Condomaps"> <span>Condomaps ↗</span>
+        </div>
+        <div class="start-item" onclick="soundOpen(); window.open('https://bpt.dol.go.th/dol/', '_blank'); closeStartMenu();">
+          <img src="icons/dol-win98.svg" class="retro-icon-img" style="width: 16px; height: 16px;" alt="LPC DOL"> <span>LPC DOL ↗</span>
+        </div>
+        <div class="start-item" onclick="soundOpen(); window.open('https://drive.google.com/drive/folders/1g8UVBAg40uOT-r68EFXK48Q6h_RFRqij?usp=drive_link', '_blank'); closeStartMenu();">
+          <img src="icons/storage-win98.svg" class="retro-icon-img" style="width: 16px; height: 16px;" alt="Storage"> <span>Storage (Drive) ↗</span>
+        </div>
+        <div class="start-item" onclick="openWindow('tools'); closeStartMenu();">
+          <img src="icons/tools-win98.svg" class="retro-icon-img" style="width: 16px; height: 16px;" alt="Tools"> <span>Tools</span>
+        </div>
+        <hr style="border-top: 1px solid var(--win-dark); border-bottom: 1px solid var(--win-light); margin: 2px 0;">
+        <div class="start-item" onclick="soundOpen(); window.open('https://getartcraft.com/apps', '_blank'); closeStartMenu();" style="font-weight: bold; color: #000080;">
+          <img src="icons/artcraft-win98.svg" class="retro-icon-img" style="width: 16px; height: 16px;" alt="ArtCraft"> <span>ArtCraft Apps ↗</span>
+        </div>
+        <div class="start-item" onclick="soundOpen(); window.open('https://www.canva.com/', '_blank'); closeStartMenu();" style="font-weight: bold; color: #000080;">
+          <img src="icons/canva-win98.svg" class="retro-icon-img" style="width: 16px; height: 16px;" alt="Canva"> <span>Canva Studio ↗</span>
+        </div>
+        <hr style="border-top: 1px solid var(--win-dark); border-bottom: 1px solid var(--win-light); margin: 2px 0;">
+        <div class="start-item" onclick="soundOpen(); window.open('https://michael-o22.github.io/All-UAV04/', '_blank'); closeStartMenu();" style="font-weight: bold; color: #000080;">
+          <img src="icons/uav-win98.svg" class="retro-icon-img" style="width: 16px; height: 16px;" alt="UAV"> <span>NLPC.04 UAV Tracker ↗</span>
+        </div>
+        <div class="start-item" onclick="soundOpen(); window.open('https://workload01.my.canva.site/lpc04', '_blank'); closeStartMenu();" style="font-weight: bold; color: #000080;">
+          <img src="icons/infographic-win98.svg" class="retro-icon-img" style="width: 16px; height: 16px;" alt="Infographic"> <span>LPC.04 Infographic ↗</span>
+        </div>
+        <div class="start-item" onclick="openWindow('readme'); closeStartMenu();">
+          <span>📝</span> <span>About Me (Readme)</span>
+        </div>
+        <div class="start-item" onclick="openWindow('pong'); closeStartMenu();">
+          <span>🕹️</span> <span>Mini-Game (Pong)</span>
+        </div>
+        <div class="start-item" onclick="openWindow('settings'); closeStartMenu();">
+          <span>⚙️</span> <span>Display Settings</span>
+        </div>
+        <hr style="border-top: 1px solid var(--win-dark); border-bottom: 1px solid var(--win-light); margin: 4px 0;">
+        <div class="start-item" onclick="simulateShutdown()">
+          <span>🔌</span> <span>Shut Down...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    /* =========================================================
+       1. DATA CONFIGURATION
+       ========================================================= */
+    function getIconHtml(icon, size = 38) {
+      if (typeof icon === 'string' && (icon.endsWith('.svg') || icon.endsWith('.png') || icon.endsWith('.jpg') || icon.includes('/'))) {
+        return `<img src="${icon}" class="retro-icon-img" style="width:${size}px;height:${size}px;" alt="icon" draggable="false">`;
+      }
+      return icon;
+    }
+
+    const APPS_DATA = [
+      {
+        id: "projects",
+        title: "UAV",
+        icon: "📁",
+        type: "window",
+        component: renderProjectsApp
+      },
+      {
+        id: "condomaps",
+        title: "Condomaps",
+        icon: "icons/condo-win98.svg",
+        type: "link",
+        url: "https://demo-condomap.40.co.th/"
+      },
+      {
+        id: "lpc_dol",
+        title: "LPC DOL",
+        icon: "icons/dol-win98.svg",
+        type: "link",
+        url: "https://bpt.dol.go.th/dol/"
+      },
+      {
+        id: "storage",
+        title: "Storage",
+        icon: "icons/storage-win98.svg",
+        type: "link",
+        url: "https://drive.google.com/drive/folders/1g8UVBAg40uOT-r68EFXK48Q6h_RFRqij?usp=drive_link"
+      },
+      {
+        id: "tools",
+        title: "Tools",
+        icon: "icons/tools-win98.svg",
+        type: "window",
+        component: renderToolsApp
+      },
+      {
+        id: "nlpc_uav",
+        title: "NLPC.04 UAV.url",
+        icon: "icons/uav-win98.svg",
+        type: "link",
+        url: "https://michael-o22.github.io/All-UAV04/"
+      },
+      {
+        id: "lpc04_canva",
+        title: "LPC.04 Info.url",
+        icon: "icons/infographic-win98.svg",
+        type: "link",
+        url: "https://workload01.my.canva.site/lpc04"
+      },
+      {
+        id: "readme",
+        title: "Readme.txt",
+        icon: "📝",
+        type: "window",
+        component: renderReadmeApp
+      },
+      {
+        id: "pong",
+        title: "Retro Pong.exe",
+        icon: "🕹️",
+        type: "window",
+        component: renderPongApp
+      },
+      {
+        id: "settings",
+        title: "Display Settings",
+        icon: "⚙️",
+        type: "window",
+        component: renderSettingsApp
+      },
+      {
+        id: "github",
+        title: "GitHub Hub",
+        icon: "🐙",
+        type: "link",
+        url: "https://github.com/michael-o22"
+      },
+      {
+        id: "recycle_bin",
+        title: "Recycle Bin",
+        icon: "🗑️",
+        type: "window",
+        component: () => `<div style="text-align: center; padding: 25px;">
+          <p style="font-size: 28px; margin-bottom: 10px;">🗑️</p>
+          <p style="font-weight: bold;">ถังขยะว่างเปล่า (Empty)</p>
+          <p style="font-size: 11px; color: #555; margin-top: 6px;">ไม่มีไฟล์ที่ถูกลบในระบบนี้</p>
+        </div>`
+      }
+    ];
+
+    const SHOWCASE_PROJECTS = [
+      {
+        title: "NLPC.04 — UAV Survey Operations Tracker",
+        category: "GIS & UAV Survey Platform (กรมที่ดิน)",
+        icon: "icons/uav-win98.svg",
+        featured: true,
+        desc: "ระบบบันทึกและวิเคราะห์ข้อมูลภารกิจโดรนสำรวจ ศูนย์ข้อมูลแผนที่รูปแปลงที่ดิน กรมที่ดิน พร้อมแดชบอร์ดสถิติ แผนที่ Interactive 77 จังหวัด และระบบจัดการคลังภารกิจ Cloud Firestore",
+        tags: ["UAV Survey", "GIS Map", "Cloud Firestore", "Tailwind CSS", "กรมที่ดิน", "Live System"],
+        url: "https://michael-o22.github.io/All-UAV04/"
+      }
+    ];
+
+    /* =========================================================
+       2. RETRO SOUND ENGINE (Multi-tone Synthesis & Volume)
+       ========================================================= */
+    let audioCtx = null;
+    let soundVolume = 0.6;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSynthNotes(notes) {
+      if (!soundEnabled || soundVolume <= 0) return;
+      initAudio();
+      try {
+        const now = audioCtx.currentTime;
+        notes.forEach(n => {
+          const startTime = now + (n.delay || 0);
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = n.type || 'square';
+          osc.frequency.setValueAtTime(n.freq, startTime);
+          
+          const baseGain = (n.gain !== undefined ? n.gain : 0.08) * soundVolume;
+          gain.gain.setValueAtTime(baseGain, startTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, startTime + n.duration);
+          
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(startTime);
+          osc.stop(startTime + n.duration);
+        });
+      } catch (e) {}
+    }
+
+    function soundClick() {
+      playSynthNotes([{ freq: 880, type: 'triangle', duration: 0.03, gain: 0.06 }]);
+    }
+
+    function soundOpen() {
+      playSynthNotes([
+        { freq: 440, type: 'square', duration: 0.06, delay: 0, gain: 0.06 },
+        { freq: 659.25, type: 'square', duration: 0.06, delay: 0.04, gain: 0.06 },
+        { freq: 880, type: 'square', duration: 0.10, delay: 0.08, gain: 0.07 }
+      ]);
+    }
+
+    function soundClose() {
+      playSynthNotes([
+        { freq: 523.25, type: 'square', duration: 0.05, delay: 0, gain: 0.06 },
+        { freq: 329.63, type: 'square', duration: 0.08, delay: 0.04, gain: 0.07 }
+      ]);
+    }
+
+    function soundMinimize() {
+      playSynthNotes([
+        { freq: 784, type: 'sine', duration: 0.05, delay: 0, gain: 0.07 },
+        { freq: 523.25, type: 'sine', duration: 0.07, delay: 0.04, gain: 0.07 },
+        { freq: 392, type: 'sine', duration: 0.09, delay: 0.08, gain: 0.07 }
+      ]);
+    }
+
+    function soundMaximize() {
+      playSynthNotes([
+        { freq: 392, type: 'sine', duration: 0.05, delay: 0, gain: 0.07 },
+        { freq: 523.25, type: 'sine', duration: 0.07, delay: 0.04, gain: 0.07 },
+        { freq: 784, type: 'sine', duration: 0.10, delay: 0.08, gain: 0.07 }
+      ]);
+    }
+
+    function soundStartup() {
+      playSynthNotes([
+        { freq: 523.25, type: 'triangle', duration: 0.25, delay: 0, gain: 0.08 },
+        { freq: 659.25, type: 'triangle', duration: 0.30, delay: 0.08, gain: 0.08 },
+        { freq: 783.99, type: 'triangle', duration: 0.35, delay: 0.16, gain: 0.08 },
+        { freq: 1046.50, type: 'triangle', duration: 0.50, delay: 0.24, gain: 0.09 }
+      ]);
+    }
+
+    function soundShutdown() {
+      playSynthNotes([
+        { freq: 783.99, type: 'triangle', duration: 0.22, delay: 0, gain: 0.08 },
+        { freq: 659.25, type: 'triangle', duration: 0.22, delay: 0.10, gain: 0.08 },
+        { freq: 523.25, type: 'triangle', duration: 0.30, delay: 0.20, gain: 0.08 },
+        { freq: 392.00, type: 'triangle', duration: 0.45, delay: 0.32, gain: 0.09 }
+      ]);
+    }
+
+    function testBeep() {
+      playSynthNotes([
+        { freq: 587.33, type: 'sine', duration: 0.08, delay: 0, gain: 0.08 },
+        { freq: 880, type: 'sine', duration: 0.14, delay: 0.07, gain: 0.09 }
+      ]);
+    }
+
+    /* Volume Popup Controls */
+    function toggleVolumePopup(e) {
+      if (e) e.stopPropagation();
+      soundClick();
+      const popup = document.getElementById('volume-popup');
+      popup.style.display = popup.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function closeVolumePopup() {
+      document.getElementById('volume-popup').style.display = 'none';
+    }
+
+    function handleVolumeChange(val) {
+      soundVolume = val / 100;
+      document.getElementById('volume-level-text').textContent = `${val}%`;
+      if (val > 0 && !soundEnabled) {
+        soundEnabled = true;
+        document.getElementById('mute-checkbox').checked = false;
+      }
+      updateSoundIndicator();
+    }
+
+    function toggleMute(isMuted) {
+      soundEnabled = !isMuted;
+      updateSoundIndicator();
+      if (!isMuted) testBeep();
+    }
+
+    function updateSoundIndicator() {
+      const indicator = document.getElementById('sound-indicator');
+      indicator.textContent = (soundEnabled && soundVolume > 0) ? '🔊' : '🔇';
+    }
+
+    /* =========================================================
+       3. WINDOW MANAGEMENT (Resizable, Mobile Drag, Focus)
+       ========================================================= */
+    let activeWindows = {};
+    let currentFrontAppId = null;
+    let highestZ = 100;
+
+    function getEventPos(e) {
+      if (e.touches && e.touches.length > 0) {
+        return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+      return { x: e.clientX, y: e.clientY };
+    }
+
+    function renderDesktop() {
+      const desktop = document.getElementById('desktop');
+      desktop.innerHTML = '';
+      APPS_DATA.forEach(app => {
+        const iconEl = document.createElement('div');
+        iconEl.className = 'desktop-icon';
+        iconEl.innerHTML = `
+          <div class="icon-img">${getIconHtml(app.icon, 38)}</div>
+          <div class="icon-label">${app.title}</div>
+        `;
+
+        let clickTimer = null;
+        let lastTap = 0;
+
+        iconEl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          soundClick();
+          const now = Date.now();
+          const isDouble = (now - lastTap < 350);
+          lastTap = now;
+
+          document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+          iconEl.classList.add('selected');
+
+          if (isDouble) {
+            handleAppLaunch(app);
+          }
+        });
+
+        iconEl.addEventListener('dblclick', (e) => {
+          e.stopPropagation();
+          handleAppLaunch(app);
+        });
+
+        desktop.appendChild(iconEl);
+      });
+
+      // Clicking blank desktop unselects icons
+      desktop.addEventListener('click', () => {
+        document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+      });
+    }
+
+    function handleAppLaunch(app) {
+      if (app.type === 'link') {
+        soundOpen();
+        window.open(app.url, '_blank');
+      } else {
+        openWindow(app.id);
+      }
+    }
+
+    function openWindow(appId) {
+      const app = APPS_DATA.find(a => a.id === appId);
+      if (!app) return;
+
+      if (app.type === 'link') {
+        soundOpen();
+        window.open(app.url, '_blank');
+        return;
+      }
+
+      if (activeWindows[appId]) {
+        const winObj = activeWindows[appId];
+        if (winObj.el.style.display === 'none') {
+          winObj.el.style.display = 'flex';
+        }
+        bringToFront(appId);
+        return;
+      }
+
+      soundOpen();
+      highestZ += 2;
+      const winEl = document.createElement('div');
+      winEl.id = `window-${appId}`;
+      winEl.dataset.appId = appId;
+      winEl.className = 'win-window bevel-raised';
+      winEl.style.zIndex = highestZ;
+
+      // Responsive Initial Sizing
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const isMobile = vw <= 600;
+
+      const isLargeWin = (appId === 'projects' || appId === 'condomaps' || appId === 'storage' || appId === 'tools');
+      const defaultW = isMobile ? Math.min(vw - 20, 360) : (appId === 'projects' ? 520 : (isLargeWin ? 640 : 440));
+      const defaultH = isMobile ? Math.min(vh - 80, 500) : (appId === 'tools' ? 335 : (appId === 'projects' ? 330 : (isLargeWin ? 480 : 360)));
+
+      const offset = (Object.keys(activeWindows).length * 22) % 90;
+      const leftPos = isMobile ? 10 : Math.min(vw - defaultW - 20, 80 + offset);
+      const topPos = isMobile ? 15 : Math.min(vh - defaultH - 45, 50 + offset);
+
+      winEl.style.width = `${defaultW}px`;
+      winEl.style.height = `${defaultH}px`;
+      winEl.style.left = `${Math.max(4, leftPos)}px`;
+      winEl.style.top = `${Math.max(4, topPos)}px`;
+
+      winEl.innerHTML = `
+        <!-- 8 Resizing Handles -->
+        <div class="win-resize-handle win-resize-n" data-dir="n"></div>
+        <div class="win-resize-handle win-resize-s" data-dir="s"></div>
+        <div class="win-resize-handle win-resize-w" data-dir="w"></div>
+        <div class="win-resize-handle win-resize-e" data-dir="e"></div>
+        <div class="win-resize-handle win-resize-nw" data-dir="nw"></div>
+        <div class="win-resize-handle win-resize-ne" data-dir="ne"></div>
+        <div class="win-resize-handle win-resize-sw" data-dir="sw"></div>
+        <div class="win-resize-handle win-resize-se" data-dir="se"></div>
+
+        <div class="win-titlebar" id="titlebar-${appId}">
+          <div class="title-left">
+            <span>${getIconHtml(app.icon, 16)}</span>
+            <span>${app.id === 'tools' ? 'Tools — Work Applications' : app.title}</span>
+          </div>
+          <div class="title-controls">
+            <button class="win-btn" title="Minimize" onclick="minimizeWindow('${appId}', event)">_</button>
+            <button class="win-btn max-btn" title="Maximize/Restore" onclick="toggleMaximizeWindow('${appId}', event)">□</button>
+            <button class="win-btn" title="Close" onclick="closeWindow('${appId}', event)">✕</button>
+          </div>
+        </div>
+        <div class="win-content">
+          ${app.component ? app.component() : 'Content loading...'}
+        </div>
+      `;
+
+      document.body.appendChild(winEl);
+      activeWindows[appId] = { el: winEl, isMaximized: false };
+
+      const titleBarEl = document.getElementById(`titlebar-${appId}`);
+      makeDraggable(winEl, titleBarEl);
+      makeResizable(winEl);
+
+      // Double click titlebar to toggle maximize
+      titleBarEl.addEventListener('dblclick', (e) => {
+        if (!e.target.closest('button')) {
+          toggleMaximizeWindow(appId);
+        }
+      });
+
+      winEl.addEventListener('mousedown', () => bringToFront(appId));
+      winEl.addEventListener('touchstart', () => bringToFront(appId), { passive: true });
+
+      bringToFront(appId);
+    }
+
+    function bringToFront(appId) {
+      const win = activeWindows[appId];
+      if (!win) return;
+
+      highestZ += 1;
+      win.el.style.zIndex = highestZ;
+      currentFrontAppId = appId;
+
+      // Update active/inactive styling
+      document.querySelectorAll('.win-window').forEach(w => w.classList.add('inactive'));
+      win.el.classList.remove('inactive');
+
+      updateTaskbar();
+    }
+
+    function closeWindow(appId, e) {
+      if (e) e.stopPropagation();
+      soundClose();
+      if (activeWindows[appId]) {
+        // Stop pong loop if closing pong
+        if (appId === 'pong') {
+          pongActive = false;
+        }
+        activeWindows[appId].el.remove();
+        delete activeWindows[appId];
+        if (currentFrontAppId === appId) currentFrontAppId = null;
+        updateTaskbar();
+      }
+    }
+
+    function minimizeWindow(appId, e) {
+      if (e) e.stopPropagation();
+      soundMinimize();
+      const winObj = activeWindows[appId];
+      if (winObj) {
+        winObj.el.style.display = 'none';
+        winObj.el.classList.add('inactive');
+        if (currentFrontAppId === appId) {
+          currentFrontAppId = null;
+          // Focus remaining visible window if any
+          const remaining = Object.keys(activeWindows).filter(id => activeWindows[id].el.style.display !== 'none');
+          if (remaining.length > 0) {
+            bringToFront(remaining[remaining.length - 1]);
+          }
+        }
+        updateTaskbar();
+      }
+    }
+
+    function toggleMaximizeWindow(appId, e) {
+      if (e) e.stopPropagation();
+      const winObj = activeWindows[appId];
+      if (!winObj) return;
+
+      const maxBtn = winObj.el.querySelector('.max-btn');
+
+      if (!winObj.isMaximized) {
+        soundMaximize();
+        winObj.prevStyle = {
+          top: winObj.el.style.top,
+          left: winObj.el.style.left,
+          width: winObj.el.style.width,
+          height: winObj.el.style.height
+        };
+        winObj.el.style.top = '0px';
+        winObj.el.style.left = '0px';
+        winObj.el.style.width = '100vw';
+        winObj.el.style.height = 'calc(100vh - 32px)';
+        winObj.el.classList.add('is-maximized');
+        winObj.isMaximized = true;
+        if (maxBtn) maxBtn.textContent = '❐';
+      } else {
+        soundMinimize();
+        winObj.el.style.top = winObj.prevStyle.top;
+        winObj.el.style.left = winObj.prevStyle.left;
+        winObj.el.style.width = winObj.prevStyle.width;
+        winObj.el.style.height = winObj.prevStyle.height;
+        winObj.el.classList.remove('is-maximized');
+        winObj.isMaximized = false;
+        if (maxBtn) maxBtn.textContent = '□';
+      }
+      bringToFront(appId);
+    }
+
+    /* Draggable Logic (Mouse + Touch Support & Clamping) */
+    function makeDraggable(element, handle) {
+      let startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
+
+      function onDragStart(e) {
+        if (element.classList.contains('is-maximized')) return;
+        if (e.target.closest('button')) return;
+
+        const pos = getEventPos(e);
+        startX = pos.x;
+        startY = pos.y;
+        initialLeft = element.offsetLeft;
+        initialTop = element.offsetTop;
+
+        window.addEventListener('mousemove', onDragMove, { passive: false });
+        window.addEventListener('mouseup', onDragEnd);
+        window.addEventListener('touchmove', onDragMove, { passive: false });
+        window.addEventListener('touchend', onDragEnd);
+
+        bringToFront(element.dataset.appId);
+      }
+
+      function onDragMove(e) {
+        e.preventDefault();
+        const pos = getEventPos(e);
+        const dx = pos.x - startX;
+        const dy = pos.y - startY;
+
+        let newLeft = initialLeft + dx;
+        let newTop = initialTop + dy;
+
+        // Clamping inside viewport bounds
+        const maxLeft = window.innerWidth - 60;
+        const maxTop = window.innerHeight - 56;
+        newLeft = Math.max(-element.offsetWidth + 100, Math.min(maxLeft, newLeft));
+        newTop = Math.max(0, Math.min(maxTop, newTop));
+
+        element.style.left = `${newLeft}px`;
+        element.style.top = `${newTop}px`;
+      }
+
+      function onDragEnd() {
+        window.removeEventListener('mousemove', onDragMove);
+        window.removeEventListener('mouseup', onDragEnd);
+        window.removeEventListener('touchmove', onDragMove);
+        window.removeEventListener('touchend', onDragEnd);
+      }
+
+      handle.addEventListener('mousedown', onDragStart);
+      handle.addEventListener('touchstart', onDragStart, { passive: false });
+    }
+
+    /* Resizable Logic (8 Handles, Mouse + Touch Support) */
+    function makeResizable(element) {
+      const handles = element.querySelectorAll('.win-resize-handle');
+      handles.forEach(handle => {
+        const dir = handle.dataset.dir;
+
+        function onResizeStart(e) {
+          if (element.classList.contains('is-maximized')) return;
+          e.stopPropagation();
+          e.preventDefault();
+
+          const pos = getEventPos(e);
+          const startX = pos.x;
+          const startY = pos.y;
+          const startW = element.offsetWidth;
+          const startH = element.offsetHeight;
+          const startL = element.offsetLeft;
+          const startT = element.offsetTop;
+
+          function onResizeMove(e) {
+            e.preventDefault();
+            const curPos = getEventPos(e);
+            const dx = curPos.x - startX;
+            const dy = curPos.y - startY;
+
+            const minW = 280;
+            const minH = 180;
+            const maxW = window.innerWidth;
+            const maxH = window.innerHeight - 34;
+
+            let newW = startW;
+            let newH = startH;
+            let newL = startL;
+            let newT = startT;
+
+            if (dir.includes('e')) {
+              newW = Math.min(maxW - startL, Math.max(minW, startW + dx));
+            }
+            if (dir.includes('s')) {
+              newH = Math.min(maxH - startT, Math.max(minH, startH + dy));
+            }
+            if (dir.includes('w')) {
+              const possibleW = startW - dx;
+              if (possibleW >= minW) {
+                newW = possibleW;
+                newL = startL + dx;
+              }
+            }
+            if (dir.includes('n')) {
+              const possibleH = startH - dy;
+              if (possibleH >= minH && (startT + dy) >= 0) {
+                newH = possibleH;
+                newT = startT + dy;
+              }
+            }
+
+            element.style.width = `${newW}px`;
+            element.style.height = `${newH}px`;
+            element.style.left = `${newL}px`;
+            element.style.top = `${newT}px`;
+          }
+
+          function onResizeEnd() {
+            window.removeEventListener('mousemove', onResizeMove);
+            window.removeEventListener('mouseup', onResizeEnd);
+            window.removeEventListener('touchmove', onResizeMove);
+            window.removeEventListener('touchend', onResizeEnd);
+          }
+
+          window.addEventListener('mousemove', onResizeMove, { passive: false });
+          window.addEventListener('mouseup', onResizeEnd);
+          window.addEventListener('touchmove', onResizeMove, { passive: false });
+          window.addEventListener('touchend', onResizeEnd);
+        }
+
+        handle.addEventListener('mousedown', onResizeStart);
+        handle.addEventListener('touchstart', onResizeStart, { passive: false });
+      });
+    }
+
+    function updateTaskbar() {
+      const container = document.getElementById('taskbar-windows');
+      container.innerHTML = '';
+
+      Object.keys(activeWindows).forEach(appId => {
+        const app = APPS_DATA.find(a => a.id === appId);
+        const winObj = activeWindows[appId];
+        const isVisible = winObj.el.style.display !== 'none';
+        const isCurrentFront = isVisible && currentFrontAppId === appId;
+
+        const item = document.createElement('button');
+        item.className = `btn-retro taskbar-item ${isCurrentFront ? 'active active-pressed' : ''}`;
+        item.innerHTML = `<span>${getIconHtml(app.icon, 16)}</span> <span>${app.title}</span>`;
+
+        item.onclick = (e) => {
+          e.stopPropagation();
+          soundClick();
+
+          if (!isVisible) {
+            // Restore from minimize
+            winObj.el.style.display = 'flex';
+            bringToFront(appId);
+          } else if (isCurrentFront) {
+            // Minimize if clicked while active
+            minimizeWindow(appId);
+          } else {
+            // Bring to front
+            bringToFront(appId);
+          }
+        };
+
+        container.appendChild(item);
+      });
+    }
+
+    /* =========================================================
+       4. APP CONTENT RENDERERS
+       ========================================================= */
+    function renderProjectsApp() {
+      return `
+        <div style="margin-bottom: 10px; font-weight: bold; color: #000080; display: flex; align-items: center; justify-content: space-between;">
+          <span>🚁 ระบบภารกิจโดรนสำรวจ (UAV Survey Operations):</span>
+          <span style="font-size: 10px; color: #555;">(คลิกเพื่อเปิดระบบจริง)</span>
+        </div>
+        <div class="project-grid">
+          ${SHOWCASE_PROJECTS.map(proj => `
+            <div class="project-card ${proj.featured ? 'featured-card' : ''}">
+              ${proj.featured ? `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                  <span class="featured-badge">⭐ FEATURED LIVE PROJECT</span>
+                  <span style="font-size: 9px; color: #008000; font-weight: bold;">● ONLINE LIVE</span>
+                </div>
+              ` : ''}
+              <div class="project-header">
+                <span class="proj-icon">${getIconHtml(proj.icon, 28)}</span>
+                <div>
+                  <div class="project-title">${proj.title}</div>
+                  <div style="font-size: 10px; color: #666;">${proj.category}</div>
+                </div>
+              </div>
+              <div class="project-desc">${proj.desc}</div>
+              <div class="project-tags">
+                ${proj.tags.map(t => `<span class="tag-badge">${t}</span>`).join('')}
+              </div>
+              <div style="display: flex; gap: 6px; margin-top: 4px; align-items: center;">
+                <button class="btn-retro" style="font-size: 10px; padding: 2px 6px;" onclick="event.stopPropagation(); copyToolLink('${proj.url}')" title="คัดลอกลิงก์">
+                  📋 ลิงก์
+                </button>
+                <button class="btn-retro" style="${proj.featured ? 'background: #000080; color: #ffffff; border-color: #ffffff #000000 #000000 #ffffff;' : ''}" onclick="soundOpen(); window.open('${proj.url}', '_blank')">
+                  ${proj.featured ? '🚀 เปิดเข้าสู่เว็บไซต์จริง ↗' : 'เปิดเว็บไซต์ ↗'}
+                </button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderCondomapsApp() {
+      soundOpen();
+      window.open('https://demo-condomap.40.co.th/', '_blank');
+      return '';
+    }
+
+    function renderStorageApp() {
+      return `
+        <div style="display: flex; flex-direction: column; gap: 10px; height: 100%;">
+          <!-- Storage Capacity Header -->
+          <fieldset style="border: 2px groove var(--win-gray); padding: 10px; background: #ffffff;">
+            <legend style="font-weight: bold; color: #000080;">💾 Data Storage Capacity & Partitions</legend>
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+              <img src="icons/storage-win98.svg" style="width: 32px; height: 32px; image-rendering: pixelated;" alt="Storage">
+              <div>
+                <div style="font-weight: bold; font-size: 12px;">RETROLINK STORAGE DRIVE (C:)</div>
+                <div style="font-size: 11px; color: #555;">ระบบจัดเก็บข้อมูลภารกิจ แผนที่ และอินโฟกราฟิก</div>
+              </div>
+            </div>
+
+            <!-- Meter Bar -->
+            <div style="background: #e0e0e0; border: 2px solid; border-color: #808080 #fff #fff #808080; height: 18px; width: 100%; position: relative; overflow: hidden; display: flex;">
+              <div style="width: 55%; background: #000080; height: 100%;" title="Used: 65.8 GB"></div>
+              <div style="width: 15%; background: #008080; height: 100%;" title="GIS Cache: 18.0 GB"></div>
+              <div style="width: 30%; background: #c0c0c0; height: 100%;" title="Free: 36.2 GB"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 10px; margin-top: 4px; color: #333;">
+              <span>■ ใช้ไปแล้ว (Used): 83.8 GB</span>
+              <span>□ พื้นที่ว่าง (Free): 36.2 GB / รวม 120.0 GB</span>
+            </div>
+          </fieldset>
+
+          <!-- Partition Details List -->
+          <div class="bevel-sunken" style="flex: 1; background: #ffffff; padding: 8px; overflow-y: auto; font-family: monospace; font-size: 11px;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr style="background: #e0e0e0; border-bottom: 1px solid #808080;">
+                  <th style="padding: 4px;">Partition / Data Asset</th>
+                  <th style="padding: 4px;">Format</th>
+                  <th style="padding: 4px;">Size</th>
+                  <th style="padding: 4px;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px dotted #ccc;">
+                  <td style="padding: 4px;">🚁 UAV Raw Flight Datasets</td>
+                  <td style="padding: 4px;">GeoTIFF / RAW</td>
+                  <td style="padding: 4px;">42.8 GB</td>
+                  <td style="padding: 4px; color: green;">Synchronized</td>
+                </tr>
+                <tr style="border-bottom: 1px dotted #ccc;">
+                  <td style="padding: 4px;">🏢 Condomaps CAD & Shapefiles</td>
+                  <td style="padding: 4px;">SHP / GeoJSON</td>
+                  <td style="padding: 4px;">18.6 GB</td>
+                  <td style="padding: 4px; color: green;">Indexed</td>
+                </tr>
+                <tr style="border-bottom: 1px dotted #ccc;">
+                  <td style="padding: 4px;">📊 Infographic Media Assets</td>
+                  <td style="padding: 4px;">PNG / SVG / PDF</td>
+                  <td style="padding: 4px;">12.4 GB</td>
+                  <td style="padding: 4px; color: green;">Online</td>
+                </tr>
+                <tr>
+                  <td style="padding: 4px;">☁️ Cloud Firestore Local Cache</td>
+                  <td style="padding: 4px;">JSON / IndexedDB</td>
+                  <td style="padding: 4px;">10.0 GB</td>
+                  <td style="padding: 4px; color: green;">Active</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="display: flex; gap: 8px; justify-content: flex-end;">
+            <button class="btn-retro" style="font-weight: bold; color: #000080;" onclick="soundOpen(); window.open('https://drive.google.com/drive/folders/1g8UVBAg40uOT-r68EFXK48Q6h_RFRqij?usp=drive_link', '_blank');">📁 เปิดใน Google Drive ↗</button>
+            <button class="btn-retro" onclick="soundClick(); alert('เริ่มสแกนตรวจสอบความสมบูรณ์ของดิสก์... สมบูรณ์ 100%');">🔍 Scan Storage</button>
+            <button class="btn-retro" onclick="soundClick(); alert('จัดเรียงพื้นที่จัดเก็บข้อมูล (Defragmentation) เรียบร้อยแล้ว!');">🧹 Defrag Drive</button>
+          </div>
+        </div>
+      `;
+    }
+
+    /* =========================================================
+       4.1 WORK TOOLS (ArtCraft Apps & Canva Studio)
+       ========================================================= */
+    const DEFAULT_WORK_TOOLS = [
+      {
+        id: "artcraft",
+        title: "ArtCraft Apps",
+        url: "https://getartcraft.com/apps",
+        displayUrl: "https://getartcraft.com/apps",
+        icon: "icons/artcraft-win98.svg",
+        category: "Creative & Pixel Art",
+        type: "web",
+        badge: "⭐ WORK TOOL ↗",
+        badgeBg: "#000080",
+        desc: "ชุดเครื่องมือออนไลน์สร้างสรรค์ Pixel Art, Game Sprites และงานกราฟิกสไตล์ Retro ยุค 90s พร้อมระบบวาด แปลงภาพ และจัดเตรียม Assets สำหรับโปรเจกต์งาน",
+        tags: ["Pixel Art", "Sprite Editor", "Game Assets", "Web Tool", "Live Studio"],
+        featured: true
+      },
+      {
+        id: "canva",
+        title: "Canva Studio",
+        url: "https://www.canva.com/",
+        displayUrl: "https://www.canva.com/",
+        icon: "icons/canva-win98.svg",
+        category: "Visual Design & Presentations",
+        type: "web",
+        badge: "⭐ WORK TOOL ↗",
+        badgeBg: "#000080",
+        desc: "แพลตฟอร์มออกแบบสื่อกราฟิก สื่อนำเสนอ อินโฟกราฟิก และเอกสาร เพื่อสนับสนุนการทำงานและการนำเสนอภารกิจขององค์กรอย่างมืออาชีพ",
+        tags: ["Graphic Design", "Presentations", "Infographics", "Design Studio", "Collaboration"],
+        featured: true
+      }
+    ];
+
+    function copyToolLink(url) {
+      if (!url) return;
+      soundClick();
+      navigator.clipboard.writeText(url).then(() => {
+        showToolsStatusToast('📋 คัดลอกลิงก์ ' + url + ' ไปยังคลิปบอร์ดแล้ว!');
+      }).catch(() => {
+        const inp = document.createElement('input');
+        inp.value = url;
+        document.body.appendChild(inp);
+        inp.select();
+        document.execCommand('copy');
+        inp.remove();
+        showToolsStatusToast('📋 คัดลอกลิงก์ ' + url + ' แล้ว!');
+      });
+    }
+
+    function showToolsStatusToast(msg) {
+      const rightEl = document.getElementById('tools-status-right');
+      if (!rightEl) return;
+      const original = rightEl.innerHTML;
+      rightEl.innerHTML = '<span style="color: #008000; font-weight: bold;">' + msg + '</span>';
+      setTimeout(() => {
+        const el = document.getElementById('tools-status-right');
+        if (el) el.innerHTML = original;
+      }, 3500);
+    }
+
+    function initToolsApp() {
+      renderToolsContent();
+    }
+
+    function renderToolsContent() {
+      const container = document.getElementById('tools-items-view');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 10px; padding: 2px 0;">
+          ${DEFAULT_WORK_TOOLS.map(tool => `
+            <div class="tool-item-card ${tool.featured ? 'featured-tool' : ''}" data-tool-id="${tool.id}">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 4px;">
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <span style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    ${getIconHtml(tool.icon, 30)}
+                  </span>
+                  <div>
+                    <div style="font-size: 12px; font-weight: bold; color: #000080; line-height: 1.2;">
+                      ${tool.title} ↗
+                    </div>
+                    <div style="font-size: 10px; color: #555; line-height: 1.2;">${tool.category}</div>
+                  </div>
+                </div>
+                <span style="font-size: 8px; font-weight: bold; background: ${tool.badgeBg || '#000080'}; color: #ffffff; padding: 1px 5px; border-radius: 2px; flex-shrink: 0;">
+                  ${tool.badge}
+                </span>
+              </div>
+
+              <div style="font-size: 10.5px; color: #333; line-height: 1.35; margin: 4px 0; flex: 1;">
+                ${tool.desc}
+              </div>
+
+              <div style="display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 4px;">
+                ${(tool.tags || []).map(t => `<span class="tag-badge" style="font-size: 8.5px;">${t}</span>`).join('')}
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 6px; border-top: 1px dotted #ccc;">
+                <span style="font-family: monospace; font-size: 9.5px; color: #006600; font-weight: bold; display: flex; align-items: center; gap: 4px;">
+                  <span style="color: #008000; font-size: 11px;">●</span> Online Connected
+                </span>
+                <div style="display: flex; gap: 4px;">
+                  <button class="btn-retro" style="font-size: 10px; padding: 2px 6px;" onclick="event.stopPropagation(); copyToolLink('${tool.url}')" title="คัดลอกลิงก์">
+                    📋 ลิงก์
+                  </button>
+                  <button class="btn-retro" style="font-size: 10px; padding: 2px 8px; font-weight: bold; background: #000080; color: #ffffff; border-color: #ffffff #000000 #000000 #ffffff;" onclick="event.stopPropagation(); soundOpen(); window.open('${tool.url}', '_blank');">
+                    🚀 เปิด ↗
+                  </button>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderToolsApp() {
+      setTimeout(initToolsApp, 30);
+      return `
+        <div id="tools-app-container" style="display: flex; flex-direction: column; gap: 8px; height: 100%; position: relative;">
+          <!-- Header Bar with Icon & Description -->
+          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px groove var(--win-gray); padding-bottom: 6px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <img src="icons/tools-win98.svg" style="width: 32px; height: 32px; image-rendering: pixelated;" alt="Tools">
+              <div>
+                <strong style="color: #000080; font-size: 13px;">Tools — Work Applications</strong>
+                <div style="font-size: 11px; color: #555;">ชุดเครื่องมือการทำงานและการออกแบบ (Design &amp; Creative Tools)</div>
+              </div>
+            </div>
+            <div style="font-size: 10px; color: #000080; font-weight: bold; background: #e0e0e0; padding: 2px 6px; border: 1px solid #808080;">
+              2 ONLINE TOOLS
+            </div>
+          </div>
+
+          <!-- Explorer Address Bar -->
+          <div class="bevel-sunken" style="background: #ffffff; padding: 3px 6px; font-family: monospace; font-size: 11px; display: flex; align-items: center; gap: 6px;">
+            <span style="color: #666; font-size: 10px; font-weight: bold;">Address</span>
+            <span style="color: #000080; font-weight: bold; flex: 1;">C:\\Tools\\Creative &amp; Design Suite</span>
+            <span style="font-size: 10px; color: #008000; font-weight: bold;">● 2 Tools Connected</span>
+          </div>
+
+          <!-- Dynamic Tools Content View (Cards) -->
+          <div id="tools-items-view" style="display: flex; flex-direction: column; gap: 8px; flex: 1; overflow-y: auto;">
+            <!-- Rendered by renderToolsContent() -->
+          </div>
+
+          <!-- Status Bar -->
+          <div class="bevel-sunken" style="background: #d4d0c8; padding: 2px 6px; font-size: 10px; color: #222; display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+            <span id="tools-status-left">📂 2 รายการเครื่องมือ: <strong>ArtCraft Apps, Canva Studio</strong></span>
+            <span id="tools-status-right" style="color: #000080; font-weight: bold;">● Online Connected</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderReadmeApp() {
+      return `
+        <div class="bevel-sunken" style="height: 100%; padding: 12px; font-family: monospace; font-size: 11px; overflow-y: auto; background: #ffffff;">
+          <pre style="line-height: 1.45; white-space: pre-wrap;">
+=========================================
+      RETROLINK SHOWCASE HUB v1.2
+=========================================
+
+ยินดีต้อนรับสู่ระบบ RetroLink OS!
+แพลตฟอร์ม Interactive สไตล์ Windows 95/98 สำหรับแสดงผลงานและเว็บไซต์
+
+[ ⭐ ผลงานเด่นที่เชื่อมต่อในระบบ (Live Web) ]
+🚁 NLPC.04 — UAV Survey Operations Tracker
+   - ลิงก์: https://michael-o22.github.io/All-UAV04/
+   - หน่วยงาน: ศูนย์ข้อมูลแผนที่รูปแปลงที่ดิน กรมที่ดิน
+   - รายละเอียด: ระบบบันทึกและวิเคราะห์ข้อมูลภารกิจโดรนสำรวจ เพื่อสนับสนุนการจัดทำแผนที่
+   - ความสามารถ: Interactive Thailand Map, Cloud Firestore, Export CSV, แดชบอร์ดสถิติรายปีงบประมาณ
+
+📊 LPC.04 — UAV Infographic & Workload
+   - ลิงก์: https://workload01.my.canva.site/lpc04
+   - หน่วยงาน: ศูนย์ข้อมูลแผนที่รูปแปลงที่ดิน (LPC.04)
+   - รายละเอียด: สื่ออินโฟกราฟิกนำเสนอภารกิจจัดทำแผนที่ภาพถ่ายทางอากาศ UAV บ้านก้อทุ่ง ตำบลก้อ อำเภอลี้ จังหวัดลำพูน
+
+💾 Storage — Google Drive Cloud Repository
+   - ลิงก์: https://drive.google.com/drive/folders/1g8UVBAg40uOT-r68EFXK48Q6h_RFRqij?usp=drive_link
+   - หน่วยงาน: คลังจัดเก็บข้อมูลและไฟล์ภารกิจส่วนกลาง
+   - รายละเอียด: ศูนย์รวมเอกสาร ข้อมูลภารกิจโดรนสำรวจ แผนที่ภาพถ่าย และสื่ออินโฟกราฟิก
+
+[ 🔧 แหล่งเก็บเครื่องมือการทำงาน (Tools) ]
+🎨 ArtCraft Apps: https://getartcraft.com/apps
+   - เครื่องมือสร้าง Pixel Art, 2D Sprites และกราฟิกสไตล์ Retro ยุค 90s สำหรับงานออกแบบ
+📐 Canva: https://www.canva.com/
+   - แพลตฟอร์มออกแบบสื่อ กราฟิก อินโฟกราฟิก และสไลด์นำเสนอสำหรับการทำงาน
+
+[ ข้อมูลผู้จัดทำ ]
+- ผู้พัฒนา: Michael & Team (NLPC.04)
+- แนวคิด: 90s Desktop UI Web Directory
+- สถานะ: Active & Connected
+          </pre>
+        </div>
+      `;
+    }
+
+    function renderSettingsApp() {
+      return `
+        <div style="display: flex; flex-direction: column; gap: 14px; padding: 6px;">
+          <fieldset style="border: 2px groove var(--win-gray); padding: 10px;">
+            <legend style="font-weight: bold;">CRT Display Shader</legend>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox" id="crt-toggle" checked onchange="toggleCRT(this.checked)">
+              เปิดเส้นสแกนจอโทรทัศน์โบราณ (CRT Scanlines)
+            </label>
+          </fieldset>
+
+          <fieldset style="border: 2px groove var(--win-gray); padding: 10px;">
+            <legend style="font-weight: bold;">Desktop Wallpaper</legend>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div>
+                <div style="font-weight: bold; margin-bottom: 6px; color: #000080;">🖼️ วอลเปเปอร์รูปภาพ (Image):</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
+                  <button class="btn-retro" onclick="setWallpaper('thumb-1920-1161622.png')">
+                    🪟 Windows 98 Original
+                  </button>
+                  <label class="btn-retro" style="cursor: pointer;">
+                    📁 เลือกรูปจากเครื่อง...
+                    <input type="file" id="bg-file-input" accept="image/*" style="display: none;" onchange="handleWallpaperUpload(event)">
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <div style="font-weight: bold; margin-bottom: 6px; color: #000080;">🎨 สีพื้นหลังคลาสสิก (Solid Colors):</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                  <button class="btn-retro" onclick="changeBg('#008080')">Teal 95</button>
+                  <button class="btn-retro" onclick="changeBg('#2e0854')">Cyberpunk</button>
+                  <button class="btn-retro" onclick="changeBg('#003366')">Deep Navy</button>
+                  <button class="btn-retro" onclick="changeBg('#000000')">Matrix Black</button>
+                  <button class="btn-retro" onclick="changeBg('#3a6ea5')">Win 98 Blue</button>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      `;
+    }
+
+    let pongActive = false;
+    function renderPongApp() {
+      setTimeout(initPongCanvas, 60);
+      return `
+        <div style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+          <canvas id="pongCanvas" width="340" height="200" style="background: black; border: 2px solid white; max-width: 100%; height: auto; touch-action: none;"></canvas>
+          <div style="font-size: 11px; margin-top: 8px; color: #222;">🎮 ใช้เมาส์เลื่อนขึ้น-ลง หรือแตะลากบนหน้าจอเพื่อบังคับไม้ตี</div>
+        </div>
+      `;
+    }
+
+    function initPongCanvas() {
+      const cvs = document.getElementById('pongCanvas');
+      if (!cvs) return;
+      const ctx = cvs.getContext('2d');
+      pongActive = true;
+
+      let ballX = 170, ballY = 100, speedX = 3.2, speedY = 2.2;
+      let playerY = 70, aiY = 70;
+
+      function setPaddleY(clientY) {
+        const rect = cvs.getBoundingClientRect();
+        const scaleY = cvs.height / rect.height;
+        playerY = (clientY - rect.top) * scaleY - 20;
+        playerY = Math.max(0, Math.min(160, playerY));
+      }
+
+      cvs.onmousemove = (e) => setPaddleY(e.clientY);
+      cvs.ontouchmove = (e) => {
+        if (e.touches.length > 0) {
+          e.preventDefault();
+          setPaddleY(e.touches[0].clientY);
+        }
+      };
+
+      function update() {
+        if (!pongActive || !document.getElementById('pongCanvas')) {
+          pongActive = false;
+          return;
+        }
+
+        ballX += speedX;
+        ballY += speedY;
+
+        if (ballY <= 0 || ballY >= 192) {
+          speedY = -speedY;
+          playSynthNotes([{ freq: 440, type: 'triangle', duration: 0.02, gain: 0.04 }]);
+        }
+
+        // Player collision
+        if (ballX <= 14 && ballY >= playerY && ballY <= playerY + 44) {
+          speedX = Math.abs(speedX);
+          playSynthNotes([{ freq: 659, type: 'square', duration: 0.03, gain: 0.05 }]);
+        }
+
+        // AI collision
+        if (ballX >= 322 && ballY >= aiY && ballY <= aiY + 44) {
+          speedX = -Math.abs(speedX);
+          playSynthNotes([{ freq: 523, type: 'square', duration: 0.03, gain: 0.05 }]);
+        }
+
+        // Reset if scored
+        if (ballX < 0 || ballX > 340) {
+          ballX = 170;
+          ballY = 100;
+          speedX = -speedX;
+        }
+
+        // Smooth AI
+        aiY += (ballY - (aiY + 22)) * 0.09;
+        aiY = Math.max(0, Math.min(160, aiY));
+
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, 340, 200);
+
+        // Center line
+        ctx.strokeStyle = '#444';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(170, 0);
+        ctx.lineTo(170, 200);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Paddles & Ball
+        ctx.fillStyle = 'white';
+        ctx.fillRect(6, playerY, 7, 40); // Player
+        ctx.fillRect(327, aiY, 7, 40);   // AI
+        ctx.fillRect(ballX, ballY, 8, 8); // Ball
+
+        requestAnimationFrame(update);
+      }
+      update();
+    }
+
+    function toggleCRT(enabled) {
+      document.getElementById('crt-overlay').style.opacity = enabled ? '0.75' : '0';
+    }
+
+    function changeBg(color) {
+      document.body.style.backgroundImage = 'none';
+      document.body.style.backgroundColor = color;
+      try {
+        localStorage.setItem('retrolink_bg_type', 'color');
+        localStorage.setItem('retrolink_bg_val', color);
+      } catch (e) {}
+    }
+
+    function setWallpaper(imgUrl, fit = 'cover') {
+      document.body.style.backgroundImage = `url('${imgUrl}')`;
+      document.body.style.backgroundSize = fit;
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundRepeat = fit === 'repeat' ? 'repeat' : 'no-repeat';
+      try {
+        localStorage.setItem('retrolink_bg_type', 'image');
+        localStorage.setItem('retrolink_bg_val', imgUrl);
+      } catch (e) {}
+    }
+
+    function handleWallpaperUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        soundClick();
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setWallpaper(event.target.result, 'cover');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    /* Start Menu Control */
+    function toggleStartMenu(e) {
+      if (e) e.stopPropagation();
+      soundClick();
+      const menu = document.getElementById('start-menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function closeStartMenu() {
+      document.getElementById('start-menu').style.display = 'none';
+    }
+
+    function simulateShutdown() {
+      soundShutdown();
+      closeStartMenu();
+      document.body.innerHTML = `
+        <div style="background: black; color: #ff6600; width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: monospace; font-size: 20px; text-align: center; gap: 16px;">
+          <div>IT IS NOW SAFE TO TURN OFF<br>YOUR COMPUTER.</div>
+          <button class="btn-retro" style="font-size: 13px; margin-top: 10px;" onclick="location.reload()">
+            🔄 Restart RetroLink OS
+          </button>
+        </div>
+      `;
+    }
+
+    // Dismiss Popups when clicking outside
+    document.addEventListener('click', (e) => {
+      const startMenu = document.getElementById('start-menu');
+      const startBtn = document.getElementById('start-btn');
+      if (startMenu && startMenu.style.display === 'block' && !startMenu.contains(e.target) && e.target !== startBtn && !startBtn.contains(e.target)) {
+        closeStartMenu();
+      }
+
+      const volPopup = document.getElementById('volume-popup');
+      const soundInd = document.getElementById('sound-indicator');
+      if (volPopup && volPopup.style.display === 'flex' && !volPopup.contains(e.target) && e.target !== soundInd) {
+        closeVolumePopup();
+      }
+    });
+
+    // Update Clock in Taskbar
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // Initial system boot
+    window.onload = () => {
+      // Restore saved wallpaper if any
+      try {
+        const savedType = localStorage.getItem('retrolink_bg_type');
+        const savedVal = localStorage.getItem('retrolink_bg_val');
+        if (savedType === 'color' && savedVal) {
+          changeBg(savedVal);
+        } else if (savedType === 'image' && savedVal) {
+          setWallpaper(savedVal);
+        }
+      } catch (e) {}
+
+      renderDesktop();
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // Play soft startup sound on first user touch/click anywhere (browser autoplay policy)
+      const playInitialBoot = () => {
+        soundStartup();
+        window.removeEventListener('click', playInitialBoot);
+        window.removeEventListener('touchstart', playInitialBoot);
+      };
+      window.addEventListener('click', playInitialBoot);
+      window.addEventListener('touchstart', playInitialBoot);
+
+      // Open showcase window initially
+      setTimeout(() => openWindow('projects'), 300);
+    };
+  </script>
+</body>
+</html>

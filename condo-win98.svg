@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="48" height="48" shape-rendering="crispEdges">
+  <!-- Windows 98 Map Base / Ground Paper -->
+  <path d="M2 25h28v4H2z" fill="#008080"/>
+  <path d="M1 26h30v1H1z" fill="#004040"/>
+  <!-- Street / Plaza Grid -->
+  <rect x="2" y="27" width="28" height="2" fill="#808080"/>
+  <path d="M4 28h3v1H4zM10 28h3v1h-3zM16 28h3v1h-3zM22 28h3v1h-3z" fill="#ffffff"/>
+
+  <!-- Left Secondary Tower (Office / Condo Block B) -->
+  <rect x="4" y="12" width="7" height="13" fill="#a0a0a0"/>
+  <rect x="4" y="12" width="1" height="13" fill="#ffffff"/>
+  <rect x="10" y="12" width="1" height="13" fill="#505050"/>
+  <path d="M4 11h7v1H4zM3 12h1v13H3zM11 12h1v13h-1z" fill="#000000"/>
+  <!-- Left Windows (Cyan & Amber) -->
+  <rect x="5" y="14" width="2" height="1" fill="#00ffff"/>
+  <rect x="8" y="14" width="2" height="1" fill="#ffff55"/>
+  <rect x="5" y="17" width="2" height="1" fill="#ffff55"/>
+  <rect x="8" y="17" width="2" height="1" fill="#00ffff"/>
+  <rect x="5" y="20" width="2" height="1" fill="#00ffff"/>
+  <rect x="8" y="20" width="2" height="1" fill="#ffffff"/>
+
+  <!-- Right Secondary Tower (Condo Block C) -->
+  <rect x="21" y="15" width="7" height="10" fill="#9098a0"/>
+  <rect x="21" y="15" width="1" height="10" fill="#ffffff"/>
+  <rect x="27" y="15" width="1" height="10" fill="#404850"/>
+  <path d="M21 14h7v1h-7zM20 15h1v10h-1zM28 15h1v10h-1z" fill="#000000"/>
+  <!-- Right Windows -->
+  <rect x="22" y="17" width="2" height="1" fill="#ffff55"/>
+  <rect x="25" y="17" width="2" height="1" fill="#00ffff"/>
+  <rect x="22" y="20" width="2" height="1" fill="#00ffff"/>
+  <rect x="25" y="20" width="2" height="1" fill="#ffff55"/>
+
+  <!-- Center Main Skyscraper (Condo Tower A) -->
+  <rect x="11" y="5" width="10" height="20" fill="#0055aa"/>
+  <rect x="11" y="5" width="1" height="20" fill="#80c0ff"/>
+  <rect x="20" y="5" width="1" height="20" fill="#002255"/>
+  <!-- Top Roof Bevel -->
+  <rect x="12" y="4" width="8" height="1" fill="#80c0ff"/>
+  <path d="M11 4h1v1h-1zM20 4h1v1h-1z" fill="#000000"/>
+  <path d="M12 3h8v1h-8zM10 5h1v20h-1zM21 5h1v20h-1z" fill="#000000"/>
+
+  <!-- Antenna Mast with Red Beacon -->
+  <rect x="15" y="2" width="2" height="2" fill="#a0a0a0"/>
+  <rect x="15" y="0" width="2" height="2" fill="#ff0000"/>
+  <rect x="15.5" y="0.5" width="1" height="1" fill="#ffffff"/>
+  <path d="M14 2h1v2h-1zM17 2h1v2h-1z" fill="#000000"/>
+
+  <!-- Condomaps Windows Grid (Lit Apartments) -->
+  <!-- Floor 8 -->
+  <rect x="13" y="6" width="2" height="1" fill="#ffff55"/>
+  <rect x="17" y="6" width="2" height="1" fill="#00ffff"/>
+  <!-- Floor 7 -->
+  <rect x="13" y="8" width="2" height="1" fill="#00ffff"/>
+  <rect x="17" y="8" width="2" height="1" fill="#ffff55"/>
+  <!-- Floor 6 -->
+  <rect x="13" y="10" width="2" height="1" fill="#ffffff"/>
+  <rect x="17" y="10" width="2" height="1" fill="#00ffff"/>
+  <!-- Floor 5 -->
+  <rect x="13" y="12" width="2" height="1" fill="#ffff55"/>
+  <rect x="17" y="12" width="2" height="1" fill="#ffff55"/>
+  <!-- Floor 4 -->
+  <rect x="13" y="14" width="2" height="1" fill="#00ffff"/>
+  <rect x="17" y="14" width="2" height="1" fill="#00ffff"/>
+  <!-- Floor 3 -->
+  <rect x="13" y="16" width="2" height="1" fill="#ffff55"/>
+  <rect x="17" y="16" width="2" height="1" fill="#ffffff"/>
+  <!-- Floor 2 -->
+  <rect x="13" y="18" width="2" height="1" fill="#ffffff"/>
+  <rect x="17" y="18" width="2" height="1" fill="#ffff55"/>
+  <!-- Floor 1 -->
+  <rect x="13" y="20" width="2" height="1" fill="#00ffff"/>
+  <rect x="17" y="20" width="2" height="1" fill="#00ffff"/>
+  <!-- Ground Lobby Entrance -->
+  <rect x="14" y="22" width="4" height="3" fill="#ffdd55"/>
+  <rect x="15" y="22" width="2" height="3" fill="#ffffff"/>
+  <path d="M14 22h4v1h-4zM16 22v3h1v-3z" fill="#000000"/>
+
+  <!-- Map Location Pin (Red marker on lower-right) -->
+  <circle cx="25" cy="8" r="3.5" fill="#ff2200"/>
+  <circle cx="24" cy="7" r="1" fill="#ffffff"/>
+  <path d="M23 10l2 4 2-4z" fill="#cc1100"/>
+  <circle cx="25" cy="8" r="1.5" fill="#550000"/>
+  <circle cx="25" cy="8" r="3.5" fill="none" stroke="#000000" stroke-width="0.8"/>
+</svg>
